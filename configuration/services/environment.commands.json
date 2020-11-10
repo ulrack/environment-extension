@@ -1,0 +1,20 @@
+{
+    "command.environment.get": {
+        "class": "\\Ulrack\\EnvironmentExtension\\Command\\EnvironmentGetCommand",
+        "parameters": {
+            "serviceFactory": "@{invocations.environment.service.factory}"
+        }
+    },
+    "command.environment.set": {
+        "class": "\\Ulrack\\EnvironmentExtension\\Command\\EnvironmentSetCommand",
+        "parameters": {
+            "environmentStorage": "@{persistent.environment}"
+        }
+    },
+    "command.environment.list": {
+        "class": "\\Ulrack\\EnvironmentExtension\\Command\\EnvironmentListCommand",
+        "parameters": {
+            "environmentFactory": "@{invocations.environment.service.factory.extension}"
+        }
+    }
+}

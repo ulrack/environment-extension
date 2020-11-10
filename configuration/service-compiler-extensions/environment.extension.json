@@ -1,0 +1,15 @@
+{
+    "$schema": "service.compiler.extension.schema.json",
+    "class": "\\Ulrack\\Services\\Component\\Compiler\\Extension\\PassThroughCompiler",
+    "sortOrder": 100,
+    "key": "environment",
+    "schema": {
+        "type": "object",
+        "properties": {
+            "default": {
+                "default": null
+            }
+        },
+        "required": ["default"]
+    }
+}

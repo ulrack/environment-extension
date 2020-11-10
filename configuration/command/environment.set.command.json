@@ -1,0 +1,22 @@
+{
+    "parent": "environment",
+    "command": "set",
+    "description": "Set the value of an environment variable.",
+    "service": "services.command.environment.set",
+    "parameters": [
+        {
+            "long": "key",
+            "short": "k",
+            "description": "The key of the environment variable.",
+            "type": "string",
+            "required": true
+        },
+        {
+            "long": "value",
+            "short": "v",
+            "description": "The value of the environment variable.",
+            "type": "string",
+            "required": true
+        }
+    ]
+}

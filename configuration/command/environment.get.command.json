@@ -1,0 +1,15 @@
+{
+    "parent": "environment",
+    "command": "get",
+    "description": "Retrieve the value of an environment variable.",
+    "service": "services.command.environment.get",
+    "parameters": [
+        {
+            "long": "key",
+            "short": "k",
+            "description": "The key of the environment variable.",
+            "type": "string",
+            "required": true
+        }
+    ]
+}

@@ -1,0 +1,6 @@
+{
+    "parent": "environment",
+    "command": "list",
+    "description": "List all environment variable keys.",
+    "service": "services.command.environment.list"
+}
