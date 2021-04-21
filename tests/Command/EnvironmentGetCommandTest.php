@@ -8,9 +8,9 @@
 namespace Ulrack\EnvironmentExtension\Tests\Command;
 
 use PHPUnit\Framework\TestCase;
-use Ulrack\Command\Common\Command\InputInterface;
-use Ulrack\Command\Common\Command\OutputInterface;
-use Ulrack\Services\Common\ServiceFactoryInterface;
+use GrizzIt\Command\Common\Command\InputInterface;
+use GrizzIt\Command\Common\Command\OutputInterface;
+use GrizzIt\Services\Common\Factory\ServiceFactoryInterface;
 use Ulrack\EnvironmentExtension\Command\EnvironmentGetCommand;
 
 /**

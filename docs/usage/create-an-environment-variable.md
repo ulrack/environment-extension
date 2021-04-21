@@ -3,12 +3,14 @@
 This package add the ability to create and manage environment variables for
 projects. This is being managed through the services layer, so multiple
 declarations can be made per file. To create an environment variable create a
-file in the `configuration/environment` directory with the following content.
+file in the `configuration/services` directory with the following content.
 
 ```json
 {
-    "foo": {
-        "default": null
+    "environment": {
+        "foo": {
+            "default": null
+        }
     }
 }
 ```

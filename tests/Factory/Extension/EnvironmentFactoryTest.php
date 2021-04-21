@@ -19,36 +19,39 @@ use Ulrack\EnvironmentExtension\Factory\Extension\EnvironmentFactory;
 class EnvironmentFactoryTest extends TestCase
 {
     /**
-     * @covers ::registerService
-     * @covers ::getEnvironmentStorage
-     * @covers ::getKeys
      * @covers ::create
      *
      * @return void
      */
     public function testComponent(): void
     {
-        $serviceFactory = $this->createMock(ServiceFactoryInterface::class);
-        $serviceFactory->expects(static::once())
-            ->method('create')
-            ->with('persistent.environment')
-            ->willReturn($this->createMock(StorageInterface::class));
+        $storage = $this->createMock(StorageInterface::class);
 
-        $subject = new EnvironmentFactory(
-            $serviceFactory,
-            'environment',
-            [],
-            ['environment' => ['foo' => ['default' => null]]],
-            (function () {
-                return [];
-            }),
-            []
+        $create = function (string $key) use ($storage) {
+            if ($key === 'persistent.environment') {
+                return $storage;
+            }
+        };
+
+        $subject = new EnvironmentFactory();
+
+        $storage->expects(static::once())
+            ->method('has')
+            ->with('environment.foo')
+            ->willReturn(false);
+
+        $storage->expects(static::once())
+            ->method('set')
+            ->with('environment.foo', true);
+
+        $storage->expects(static::once())
+            ->method('get')
+            ->with('environment.foo')
+            ->willReturn(true);
+
+        $this->assertEquals(
+            true,
+            $subject->create('environment.foo', ['default' => true], $create)
         );
-
-        $this->assertEquals(['foo'], $subject->getKeys());
-        $this->assertEquals(null, $subject->create('environment.foo'));
-
-        $this->expectException(DefinitionNotFoundException::class);
-        $subject->create('environment.bar');
     }
 }

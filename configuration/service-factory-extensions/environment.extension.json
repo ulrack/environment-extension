@@ -1,5 +1,0 @@
-{
-    "$schema": "service.factory.extension.schema.json",
-    "class": "\\Ulrack\\EnvironmentExtension\\Factory\\Extension\\EnvironmentFactory",
-    "key": "environment"
-}

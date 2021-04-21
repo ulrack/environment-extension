@@ -8,111 +8,57 @@
 namespace Ulrack\EnvironmentExtension\Factory\Extension;
 
 use GrizzIt\Storage\Common\StorageInterface;
-use Ulrack\Services\Exception\DefinitionNotFoundException;
-use Ulrack\Services\Common\AbstractServiceFactoryExtension;
+use GrizzIt\Services\Common\Factory\ServiceFactoryExtensionInterface;
 
-class EnvironmentFactory extends AbstractServiceFactoryExtension
+class EnvironmentFactory implements ServiceFactoryExtensionInterface
 {
     /**
      * Contains the already resolved environment variables.
      *
      * @var array
      */
-    private $environmentVariables = [];
+    private array $environmentVariables = [];
 
     /**
      * Contains the environment storage.
      *
      * @var StorageInterface
      */
-    private $environmentStorage;
+    private ?StorageInterface $environmentStorage = null;
 
     /**
-     * Register a value to a service key.
+     * Converts a service key and definition to an instance.
      *
-     * @param string $serviceKey
-     * @param mixed $value
-     *
-     * @return void
-     */
-    public function registerService(string $serviceKey, $value): void
-    {
-        $this->environmentVariables[$serviceKey] = $value;
-    }
-
-    /**
-     * Retrieves the environment storage.
-     *
-     * @return StorageInterface
-     */
-    private function getEnvironmentStorage(): StorageInterface
-    {
-        if (is_null($this->environmentStorage)) {
-            $this->environmentStorage = $this->superCreate(
-                'persistent.environment'
-            );
-        }
-
-        return $this->environmentStorage;
-    }
-
-    /**
-     * Retrieves a list of all environment keys.
-     *
-     * @return array
-     */
-    public function getKeys(): array
-    {
-        return array_keys($this->getServices()[$this->getKey()] ?? []);
-    }
-
-    /**
-     * Invoke the invocation and return the result.
-     *
-     * @param string $serviceKey
+     * @param string $key
+     * @param mixed $definition
+     * @param callable $create
      *
      * @return mixed
-     *
-     * @throws DefinitionNotFoundException When the definition can not be found.
      */
-    public function create(string $serviceKey)
-    {
-        $serviceKey = $this->preCreate(
-            $serviceKey,
-            $this->getParameters()
-        )['serviceKey'];
-
-        $internalKey = preg_replace(
-            sprintf('/^%s\\./', preg_quote($this->getKey())),
-            '',
-            $serviceKey,
-            1
-        );
-
-        if (!isset($this->environmentVariables[$internalKey])) {
-            $services = $this->getServices()[$this->getKey()];
-            if (!isset($services[$internalKey])) {
-                throw new DefinitionNotFoundException($serviceKey);
-            }
-
-            $storage = $this->getEnvironmentStorage();
-            if (!$storage->has($internalKey)) {
-                $storage->set(
-                    $internalKey,
-                    $services[$internalKey]['default'] ?? null
+    public function create(
+        string $key,
+        mixed $definition,
+        callable $create
+    ): mixed {
+        if (!isset($this->environmentVariables[$key])) {
+            if (is_null($this->environmentStorage)) {
+                $this->environmentStorage = $create(
+                    'persistent.environment'
                 );
             }
 
-            $this->registerService(
-                $internalKey,
-                $storage->get($internalKey)
+            if (!$this->environmentStorage->has($key)) {
+                $this->environmentStorage->set(
+                    $key,
+                    $definition['default'] ?? null
+                );
+            }
+
+            $this->environmentVariables[$key] = $this->environmentStorage->get(
+                $key
             );
         }
 
-        return $this->postCreate(
-            $serviceKey,
-            $this->environmentVariables[$internalKey],
-            $this->getParameters()
-        )['return'];
+        return $this->environmentVariables[$key];
     }
 }

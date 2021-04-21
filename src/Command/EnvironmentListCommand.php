@@ -8,29 +8,28 @@
 namespace Ulrack\EnvironmentExtension\Command;
 
 use Exception;
-use Ulrack\Command\Common\Command\InputInterface;
-use Ulrack\Command\Common\Command\OutputInterface;
-use Ulrack\Command\Common\Command\CommandInterface;
-use Ulrack\Services\Common\ServiceFactoryInterface;
-use Ulrack\EnvironmentExtension\Factory\Extension\EnvironmentFactory;
+use GrizzIt\Command\Common\Command\InputInterface;
+use GrizzIt\Command\Common\Command\OutputInterface;
+use GrizzIt\Configuration\Common\RegistryInterface;
+use GrizzIt\Command\Common\Command\CommandInterface;
 
 class EnvironmentListCommand implements CommandInterface
 {
     /**
-     * Contains the environment factory.
+     * Contains the databases service factory.
      *
-     * @var EnvironmentFactory
+     * @var RegistryInterface
      */
-    private $environmentFactory;
+    private $configRegistry;
 
     /**
      * Constructor.
      *
-     * @param EnvironmentFactory $environmentFactory
+     * @param RegistryInterface $serviceRegsitry
      */
-    public function __construct(EnvironmentFactory $environmentFactory)
+    public function __construct(RegistryInterface $configRegistry)
     {
-        $this->environmentFactory = $environmentFactory;
+        $this->configRegistry = $configRegistry;
     }
 
     /**
@@ -45,7 +44,15 @@ class EnvironmentListCommand implements CommandInterface
         InputInterface $input,
         OutputInterface $output
     ): void {
-        $keys = $this->environmentFactory->getKeys();
+        $keys = array_keys(
+            array_merge(
+                ...array_column(
+                    $this->configRegistry->toArray()['services'],
+                    'environment'
+                )
+            )
+        );
+
         if (count($keys) > 0) {
             $output->outputList($keys);
 

@@ -1,0 +1,9 @@
+{
+    "$id": "environment.schema.json",
+    "type": "object",
+    "properties": {
+        "default": {
+            "default": null
+        }
+    }
+}

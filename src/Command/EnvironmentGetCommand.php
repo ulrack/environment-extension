@@ -7,10 +7,10 @@
 
 namespace Ulrack\EnvironmentExtension\Command;
 
-use Ulrack\Command\Common\Command\InputInterface;
-use Ulrack\Command\Common\Command\OutputInterface;
-use Ulrack\Command\Common\Command\CommandInterface;
-use Ulrack\Services\Common\ServiceFactoryInterface;
+use GrizzIt\Command\Common\Command\InputInterface;
+use GrizzIt\Command\Common\Command\OutputInterface;
+use GrizzIt\Command\Common\Command\CommandInterface;
+use GrizzIt\Services\Common\Factory\ServiceFactoryInterface;
 
 class EnvironmentGetCommand implements CommandInterface
 {

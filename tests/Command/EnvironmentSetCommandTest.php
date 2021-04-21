@@ -9,8 +9,8 @@ namespace Ulrack\EnvironmentExtension\Tests\Command;
 
 use PHPUnit\Framework\TestCase;
 use GrizzIt\Storage\Common\StorageInterface;
-use Ulrack\Command\Common\Command\InputInterface;
-use Ulrack\Command\Common\Command\OutputInterface;
+use GrizzIt\Command\Common\Command\InputInterface;
+use GrizzIt\Command\Common\Command\OutputInterface;
 use Ulrack\EnvironmentExtension\Command\EnvironmentSetCommand;
 
 /**
@@ -37,7 +37,7 @@ class EnvironmentSetCommandTest extends TestCase
 
         $storage->expects(static::once())
             ->method('set')
-            ->with('foo', 'bar');
+            ->with('environment.foo', 'bar');
 
         $subject->__invoke(
             $input,
@@ -64,7 +64,7 @@ class EnvironmentSetCommandTest extends TestCase
 
         $storage->expects(static::once())
             ->method('set')
-            ->with('foo', ['foo' => 'bar']);
+            ->with('environment.foo', ['foo' => 'bar']);
 
         $subject->__invoke(
             $input,

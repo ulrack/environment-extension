@@ -1,0 +1,59 @@
+{
+    "parameters": {
+        "service.configuration.validation.environment": {
+            "key": "environment",
+            "schema": "environment.schema.json"
+        }
+    },
+    "services": {
+        "command.environment.get": {
+            "class": "\\Ulrack\\EnvironmentExtension\\Command\\EnvironmentGetCommand",
+            "parameters": {
+                "serviceFactory": "@{internal.core.service.factory}"
+            }
+        },
+        "command.environment.set": {
+            "class": "\\Ulrack\\EnvironmentExtension\\Command\\EnvironmentSetCommand",
+            "parameters": {
+                "environmentStorage": "@{persistent.environment}"
+            }
+        },
+        "command.environment.list": {
+            "class": "\\Ulrack\\EnvironmentExtension\\Command\\EnvironmentListCommand",
+            "parameters": {
+                "configRegistry": "@{invocations.get.config.registry}"
+            }
+        },
+        "service.factory.environment": {
+            "class": "\\Ulrack\\EnvironmentExtension\\Factory\\Extension\\EnvironmentFactory"
+        }
+    },
+    "invocations": {
+        "get.config.registry": {
+            "service": "internal.core.configuration.manager",
+            "method": "getConfigRegistry"
+        },
+        "add.environment.service.factory": {
+            "service": "internal.core.service.factory",
+            "method": "addExtension",
+            "parameters": {
+                "scope": "environment",
+                "extension": "@{services.service.factory.environment}"
+            },
+            "cache": true
+        }
+    },
+    "persistent": {
+        "environment": {}
+    },
+    "tags": {
+        "add.environment.factory": {
+            "trigger": "triggers.core.service.factories",
+            "service": "invocations.add.environment.service.factory"
+        },
+        "add.service.validation.environment": {
+            "service": "parameters.service.configuration.validation.environment",
+            "trigger": "triggers.service.configuration.validation"
+        }
+    }
+}

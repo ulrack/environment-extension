@@ -8,9 +8,9 @@
 namespace Ulrack\EnvironmentExtension\Command;
 
 use GrizzIt\Storage\Common\StorageInterface;
-use Ulrack\Command\Common\Command\InputInterface;
-use Ulrack\Command\Common\Command\OutputInterface;
-use Ulrack\Command\Common\Command\CommandInterface;
+use GrizzIt\Command\Common\Command\InputInterface;
+use GrizzIt\Command\Common\Command\OutputInterface;
+use GrizzIt\Command\Common\Command\CommandInterface;
 
 class EnvironmentSetCommand implements CommandInterface
 {
@@ -51,7 +51,7 @@ class EnvironmentSetCommand implements CommandInterface
         }
 
         $this->environmentStorage->set(
-            $input->getParameter('key'),
+            'environment.' . $input->getParameter('key'),
             $value
         );
     }

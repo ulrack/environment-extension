@@ -9,10 +9,10 @@ namespace Ulrack\EnvironmentExtension\Tests\Command;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
-use Ulrack\Command\Common\Command\InputInterface;
-use Ulrack\Command\Common\Command\OutputInterface;
+use GrizzIt\Command\Common\Command\InputInterface;
+use GrizzIt\Command\Common\Command\OutputInterface;
+use GrizzIt\Configuration\Common\RegistryInterface;
 use Ulrack\EnvironmentExtension\Command\EnvironmentListCommand;
-use Ulrack\EnvironmentExtension\Factory\Extension\EnvironmentFactory;
 
 /**
  * @coversDefaultClass \Ulrack\EnvironmentExtension\Command\EnvironmentListCommand
@@ -27,12 +27,26 @@ class EnvironmentListCommandTest extends TestCase
      */
     public function testInvoke(): void
     {
-        $serviceFactory = $this->createMock(EnvironmentFactory::class);
+        $registry = $this->createMock(RegistryInterface::class);
         $output = $this->createMock(OutputInterface::class);
-        $subject = new EnvironmentListCommand($serviceFactory);
-        $serviceFactory->expects(static::once())
-            ->method('getKeys')
-            ->willReturn(['foo', 'bar']);
+        $subject = new EnvironmentListCommand($registry);
+
+        $registry->expects(static::once())
+            ->method('toArray')
+            ->willReturn([
+                'services' => [
+                    [
+                        'environment' => [
+                            'foo' => true
+                        ]
+                    ],
+                    [
+                        'environment' => [
+                            'bar' => true
+                        ]
+                    ]
+                ]
+            ]);
 
         $output->expects(static::once())
             ->method('outputList')
@@ -52,11 +66,14 @@ class EnvironmentListCommandTest extends TestCase
      */
     public function testInvokeNoKeys(): void
     {
-        $serviceFactory = $this->createMock(EnvironmentFactory::class);
-        $subject = new EnvironmentListCommand($serviceFactory);
-        $serviceFactory->expects(static::once())
-            ->method('getKeys')
-            ->willReturn([]);
+        $registry = $this->createMock(RegistryInterface::class);
+        $subject = new EnvironmentListCommand($registry);
+
+        $registry->expects(static::once())
+            ->method('toArray')
+            ->willReturn([
+                'services' => []
+            ]);
 
         $this->expectException(Exception::class);
         $subject->__invoke(
